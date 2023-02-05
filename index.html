@@ -1,0 +1,50 @@
+<button id="connectButton">Connect to Wallet</button>
+<button id="transferButton" disabled>Transfer 1 SOL</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@0.20.3/dist/web3.min.js"></script>
+<script>
+  const { Account, Client, Transaction } = Solana;
+
+  const connectButton = document.getElementById("connectButton");
+  connectButton.addEventListener("click", async function() {
+    // Connect to the user's Phantom wallet
+    const connection = await Solana.connect();
+
+    // Get the user's Phantom address
+    const senderAddress = await connection.getAddress();
+    console.log(`Sender address: ${senderAddress}`);
+
+    // Enable the transfer button
+    document.getElementById("transferButton").disabled = false;
+  });
+
+  const transferButton = document.getElementById("transferButton");
+  transferButton.addEventListener("click", async function() {
+    // Connect to a Phantom cluster
+    const client = new Client("https://api.solana.com");
+
+    // Load the user's Phantom private key
+    const connection = await Solana.connect();
+    const senderPrivateKey = await connection.getPrivateKey();
+    const sender = new Account(senderPrivateKey);
+
+    // The recipient's Phantom address
+    const recipientAddress = "BSy5Y2f8UDxPdWg9xJ8BQTtjMsimnwvkr15grTZUtb6o";
+
+    // Check the balance of the sender's wallet
+    const balance = await client.getBalance(sender.publicKey);
+    console.log(`Sender balance: ${balance} Phantom`);
+
+    // Build and sign the transaction
+    const transaction = new Transaction()
+      .add("transfer", {
+        fromPubkey: sender.publicKey,
+        toPubkey: recipientAddress,
+        amount: 1e6
+      })
+      .sign(senderPrivateKey);
+
+    // Send the transaction
+    await transaction.send();
+  });
+</script>
