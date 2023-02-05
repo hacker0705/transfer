@@ -5,10 +5,13 @@
 <script>
   const { Account, Client, Transaction } = Solana;
 
-  const connectButton = document.getElementById("connectButton");
-  connectButton.addEventListener("click", async function() {
-    // Connect to the user's Phantom wallet
-    const connection = await window.phantom.solana.connect();
+ document.getElementById("connectButton").addEventListener("click", function() {
+    if (typeof window.phantom.solana === "undefined") {
+      alert("Phantom extension is not installed or is not available.");
+    } else {
+      window.phantom.solana.connect();
+    }
+  });
 
     // Get the user's Phantom address
     const senderAddress = await connection.getAddress();
