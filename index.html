@@ -8,7 +8,7 @@
   const connectButton = document.getElementById("connectButton");
   connectButton.addEventListener("click", async function() {
     // Connect to the user's Phantom wallet
-    const connection = await Solana.connect();
+    const connection = await window.phantom.solana.connect();
 
     // Get the user's Phantom address
     const senderAddress = await connection.getAddress();
@@ -24,7 +24,7 @@
     const client = new Client("https://api.solana.com");
 
     // Load the user's Phantom private key
-    const connection = await Solana.connect();
+    const connection = await window.phantom.solana.connect();
     const senderPrivateKey = await connection.getPrivateKey();
     const sender = new Account(senderPrivateKey);
 
